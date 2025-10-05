@@ -29,7 +29,7 @@
 
       <div class="row">
         <div>
-          <h3>Upravit základní údaje</h3>
+          <h3>Upravit údaje</h3>
           <form method="post" action="/admin/acc/{{ acc.uuid }}/update">
             <label>Firma</label>
             <input type="text" name="company" value="{{ acc.company or '' }}">
@@ -39,13 +39,13 @@
           </form>
         </div>
         <div>
-          <h3>QR kód</h3>
+          <h3>QR & veřejný odkaz</h3>
           <p><a href="/admin/acc/{{ acc.uuid }}/qr" target="_blank">Otevřít QR</a></p>
           <p><a href="{{ public_url(acc.uuid) }}" target="_blank">Veřejná stránka</a></p>
         </div>
       </div>
 
-      <h3>Nahrát obrázek/PDF akreditace</h3>
+      <h3>Nahrát obrázek/PDF</h3>
       <form method="post" action="/admin/acc/{{ acc.uuid }}/upload" enctype="multipart/form-data">
         <input type="file" name="file" accept="image/*,application/pdf">
         <button>Nahrát</button>
