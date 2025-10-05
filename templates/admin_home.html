@@ -20,7 +20,8 @@
   <div class="wrap">
     <h1>Admin sekce</h1>
     <div class="top">
-      <form action="/admin/new" method="post"><button type="submit">➕ Vytvořit novou akreditaci</button></form>
+      <form action="/admin/new" method="post"><button type="submit">➕ Nová akreditace</button></form>
+      <a class="button" href="/admin/logout">Odhlásit</a>
     </div>
 
     {% if accs|length == 0 %}
@@ -28,7 +29,7 @@
     {% else %}
       <table>
         <thead>
-          <tr><th>ID (UUID)</th><th>Firma</th><th>Platnost do</th><th>Stav</th><th>QR</th><th>Veřejný odkaz</th><th>Akce</th></tr>
+          <tr><th>UUID</th><th>Firma</th><th>Platnost</th><th>Stav</th><th>QR</th><th>Veřejný odkaz</th><th>Akce</th></tr>
         </thead>
         <tbody>
         {% for a in accs %}
@@ -37,7 +38,7 @@
             <td>{{ a.company or "—" }}</td>
             <td>{{ a.valid_until or "—" }}</td>
             <td>{% if a.active %}<span class="active">AKTIVNÍ</span>{% else %}<span class="inactive">NEAKTIVNÍ</span>{% endif %}</td>
-            <td><a class="button" href="/admin/acc/{{ a.uuid }}/qr" target="_blank">Zobrazit QR</a></td>
+            <td><a class="button" href="/admin/acc/{{ a.uuid }}/qr" target="_blank">QR</a></td>
             <td><a class="button" href="{{ public_url(a.uuid) }}" target="_blank">Otevřít</a></td>
             <td>
               <form action="/admin/acc/{{ a.uuid }}/toggle" method="post" style="display:inline">
