@@ -12,22 +12,33 @@
     .bad{background:#ff7171;color:#05101a}
     .card{background:#111a2e;border-radius:14px;padding:18px;box-shadow:0 10px 25px rgba(0,0,0,.35)}
     .muted{opacity:.8}
+    img{max-width:100%;height:auto;display:block;margin:12px 0;border-radius:10px}
+    object{width:100%;height:70vh;border:0}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- horní pruh (pro ukázku vždy aktivní) -->
-    <div class="bar ok">AKTIVNÍ AKREDITACE — {{ (now() if now else '') }}</div>
-
-    <div class="card">
-      <h1>Akreditace</h1>
-      <p class="muted">ID: {{ acc.get('uuid') if acc else uuid }}</p>
-      <p class="muted">Firma: {{ (acc.get('company') if acc else '—') if acc is defined else '—' }}</p>
-      <p class="muted">Platnost do: {{ (acc.get('valid_until') if acc else '—') if acc is defined else '—' }}</p>
+    {% set nowtxt = now() %}
+    <div class="bar {{ 'ok' if acc.active else 'bad' }}">
+      {% if acc.active %}AKTIVNÍ AKREDITACE{% else %}NEAKTIVNÍ AKREDITACE{% endif %} — {{ nowtxt }}
     </div>
 
-    <!-- spodní pruh -->
-    <div class="bar ok">AKTIVNÍ AKREDITACE — {{ (now() if now else '') }}</div>
+    <div class="card">
+      <p class="muted">ID: {{ acc.uuid }}</p>
+      {% if acc.filepath %}
+        {% if acc.filepath.endswith('.pdf') %}
+          <object data="{{ acc_file_url }}" type="application/pdf"></object>
+        {% else %}
+          <img src="{{ acc_file_url }}" alt="Akreditace">
+        {% endif %}
+      {% else %}
+        <p class="muted">K této akreditaci zatím není nahrán obrázek/PDF.</p>
+      {% endif %}
+    </div>
+
+    <div class="bar {{ 'ok' if acc.active else 'bad' }}">
+      {% if acc.active %}AKTIVNÍ AKREDITACE{% else %}NEAKTIVNÍ AKREDITACE{% endif %} — {{ nowtxt }}
+    </div>
   </div>
 </body>
 </html>
