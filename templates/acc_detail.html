@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Detail akreditace</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#0b1320;color:#fff}
+    .wrap{max-width:860px;margin:24px auto;padding:0 16px}
+    .card{background:#111a2e;border-radius:12px;padding:18px;box-shadow:0 10px 25px rgba(0,0,0,.35)}
+    label{display:block;margin:8px 0 4px}
+    input,button{padding:10px;border-radius:10px;border:1px solid #1b2748;background:#0e1630;color:#fff}
+    button{background:#27c169;color:#05101a;border:0;font-weight:700;cursor:pointer;margin-top:8px}
+    .muted{opacity:.8}
+    .row{display:flex;gap:20px;flex-wrap:wrap}
+    .bar{padding:10px;border-radius:10px;text-align:center;font-weight:800;margin:10px 0}
+    .ok{background:#27c169;color:#05101a}
+    .bad{background:#ff7171;color:#05101a}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="/admin/home">← Zpět</a>
+    <h1>Detail akreditace</h1>
+    <div class="card">
+      <p class="muted">UUID: {{ acc.uuid }}</p>
+      <p>Firma: {{ acc.company or "—" }}</p>
+      <p>Platnost do: {{ acc.valid_until or "—" }}</p>
+      <p>Stav: {% if acc.active %}<b class="ok">AKTIVNÍ</b>{% else %}<b class="bad">NEAKTIVNÍ</b>{% endif %}</p>
+
+      <div class="row">
+        <div>
+          <h3>Upravit základní údaje</h3>
+          <form method="post" action="/admin/acc/{{ acc.uuid }}/update">
+            <label>Firma</label>
+            <input type="text" name="company" value="{{ acc.company or '' }}">
+            <label>Platnost do (YYYY-MM-DD)</label>
+            <input type="text" name="valid_until" value="{{ acc.valid_until or '' }}">
+            <button>Uložit</button>
+          </form>
+        </div>
+        <div>
+          <h3>QR kód</h3>
+          <p><a href="/admin/acc/{{ acc.uuid }}/qr" target="_blank">Otevřít QR</a></p>
+          <p><a href="{{ public_url(acc.uuid) }}" target="_blank">Veřejná stránka</a></p>
+        </div>
+      </div>
+
+      <h3>Nahrát obrázek/PDF akreditace</h3>
+      <form method="post" action="/admin/acc/{{ acc.uuid }}/upload" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*,application/pdf">
+        <button>Nahrát</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
