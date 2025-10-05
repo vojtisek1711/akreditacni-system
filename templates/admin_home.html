@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Akreditace</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:#0b1320;color:#fff}
+    .wrap{max-width:980px;margin:24px auto;padding:0 16px}
+    h1{margin:0 0 12px}
+    .top{display:flex;gap:8px;margin:12px 0 24px}
+    a.button,button{background:#27c169;color:#05101a;border:none;padding:10px 14px;border-radius:10px;font-weight:700;text-decoration:none}
+    table{width:100%;border-collapse:collapse;background:#111a2e;border-radius:12px;overflow:hidden}
+    th,td{padding:12px;border-bottom:1px solid #1b2748}
+    .active{color:#27c169;font-weight:700}
+    .inactive{color:#ff7171;font-weight:700}
+    .muted{opacity:.8}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Admin sekce</h1>
+    <div class="top">
+      <form action="/admin/new" method="post"><button type="submit">➕ Vytvořit novou akreditaci</button></form>
+    </div>
+
+    {% if accs|length == 0 %}
+      <p class="muted">Zatím tu nic není. Vytvoř první akreditaci tlačítkem nahoře.</p>
+    {% else %}
+      <table>
+        <thead>
+          <tr><th>ID (UUID)</th><th>Firma</th><th>Platnost do</th><th>Stav</th><th>QR</th><th>Veřejný odkaz</th><th>Akce</th></tr>
+        </thead>
+        <tbody>
+        {% for a in accs %}
+          <tr>
+            <td class="muted">{{ a.uuid }}</td>
+            <td>{{ a.company or "—" }}</td>
+            <td>{{ a.valid_until or "—" }}</td>
+            <td>{% if a.active %}<span class="active">AKTIVNÍ</span>{% else %}<span class="inactive">NEAKTIVNÍ</span>{% endif %}</td>
+            <td><a class="button" href="/admin/acc/{{ a.uuid }}/qr" target="_blank">Zobrazit QR</a></td>
+            <td><a class="button" href="{{ public_url(a.uuid) }}" target="_blank">Otevřít</a></td>
+            <td>
+              <form action="/admin/acc/{{ a.uuid }}/toggle" method="post" style="display:inline">
+                <button type="submit">{% if a.active %}Deaktivovat{% else %}Aktivovat{% endif %}</button>
+              </form>
+              <a class="button" href="/admin/acc/{{ a.uuid }}">Detail</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+</body>
+</html>
